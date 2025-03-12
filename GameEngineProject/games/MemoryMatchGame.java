@@ -2,17 +2,17 @@
 
 package GameEngineProject.games;
 
-import GameEngineProject.gameengine.Game;
-import GameEngineProject.models.Card;
-import GameEngineProject.models.Player;
-
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Scanner;
 
+import GameEngineProject.gameengine.Game;
+import GameEngineProject.models.Card;
+import GameEngineProject.models.Player;
+
 public class MemoryMatchGame implements Game {
-    private static final int GRID_SIZE = 4; // Fixed 4x4 grid
+    private static final int GRID_SIZE = 2; // Fixed 4x4 grid
     private Card[][] grid;                  // 4x4 grid of cards
     private List<Card> deck;                // Deck with 8 pairs of cards (16 cards total)
     private List<Player> players;
@@ -86,9 +86,12 @@ public class MemoryMatchGame implements Game {
 
     private void initializeDeck() {
         // Use a fixed set of 8 unique pairs of cards for the 4x4 grid
-        String[] suits = {"Hearts", "Diamonds", "Clubs", "Spades"};
-        String[] values = {"2", "3", "4", "5", "6", "7", "8", "9"};
-        for (int i = 0; i < 8; i++) {
+        // String[] suits = {"Hearts", "Diamonds", "Clubs", "Spades"};
+        // String[] values = {"2", "3", "4", "5", "6", "7", "8", "9"}; 
+        // aiya akhi deck use karine evo logic lakhvano chhe k game khatam thay jay 5 ya 7 step ma 
+        String[] suits = {"Hearts", "Diamonds"};
+        String[] values = {"2", "3"};
+        for (int i = 0; i < 2; i++) {
             deck.add(new Card(suits[i % suits.length], values[i]));
             deck.add(new Card(suits[i % suits.length], values[i])); // Add a pair of each card
         }

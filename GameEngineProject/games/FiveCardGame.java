@@ -2,14 +2,14 @@
 
 package GameEngineProject.games;
 
-import GameEngineProject.gameengine.Game;
-import GameEngineProject.models.Card;
-import GameEngineProject.models.Player;
-
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Scanner;
+
+import GameEngineProject.gameengine.Game;
+import GameEngineProject.models.Card;
+import GameEngineProject.models.Player;
 
 public class FiveCardGame implements Game {
     private List<Player> players;

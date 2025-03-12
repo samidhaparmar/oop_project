@@ -1,12 +1,11 @@
 package GameEngineProject;
 
-// src/Main.java
+import java.util.Scanner;
 
 import GameEngineProject.gameengine.GameEngine;
+import GameEngineProject.games.ElementalBattleGame;
 import GameEngineProject.games.FiveCardGame;
 import GameEngineProject.games.MemoryMatchGame;
-import GameEngineProject.games.ElementalBattleGame;
-import java.util.Scanner;
 
 public class Main {
     public static void main(String[] args) {

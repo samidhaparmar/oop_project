@@ -39,4 +39,12 @@ public class Player {
     public void incrementScore(int points) {
         score += points;
     }
+
+        // Overloaded method to demonstrate method overloading (and autoboxing in action)
+    public void incrementScore(Integer points) {
+        // This method simply calls the int version; Java autoboxing will work here.
+        incrementScore(points.intValue());
+    }
+
+    
 }
