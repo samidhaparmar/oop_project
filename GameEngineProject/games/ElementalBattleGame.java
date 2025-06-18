@@ -2,9 +2,11 @@
 
 package GameEngineProject.games;
 
+import GameEngineProject.gameengine.CardDealer;
 import GameEngineProject.gameengine.Game;
 import GameEngineProject.models.Card;
 import GameEngineProject.models.Player;
+import GameEngineProject.gameengine.InvalidMoveException;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -35,12 +37,19 @@ public class ElementalBattleGame implements Game {
             players.add(new Player(scanner.nextLine()));
         }
 
+       // Shuffle the deck once
         Collections.shuffle(deck);
+
+        // Deal 5 cards to each player via CardDealer overload
         for (Player player : players) {
-            for (int i = 0; i < 5; i++) {
-                player.addCard(deck.remove(0));
-            }
-        }
+        // Grab the next 5 cards (shuffling already done)
+        List<Card> hand = CardDealer.dealCards(deck, 5);
+        // Add to player's hand
+        hand.forEach(player::addCard);
+        // Remove dealt cards from the deck
+        deck.removeAll(hand);
+        }       
+
     }
 
     @Override
@@ -52,15 +61,23 @@ public class ElementalBattleGame implements Game {
                 Player attacker = players.get(i);
                 Player defender = players.get((i + 1) % players.size());
 
+
+                
                 System.out.println(attacker.getName() + "'s turn to attack! Your hand: " + attacker.getHand());
                 System.out.print("Enter the index of the card to attack with (0 to " + (attacker.getHand().size() - 1) + "): ");
                 int attackIndex = scanner.nextInt();
                 Card attackCard = attacker.playCard(attackIndex);
+                if (attackCard == null) {
+                    throw new InvalidMoveException("Invalid attack card index: " + attackIndex);
+                }
 
                 System.out.println(defender.getName() + "'s turn to defend! Your hand: " + defender.getHand());
                 System.out.print("Enter the index of the card to defend with (0 to " + (defender.getHand().size() - 1) + "): ");
                 int defendIndex = scanner.nextInt();
                 Card defendCard = defender.playCard(defendIndex);
+                if (defendCard == null) {
+                    throw new InvalidMoveException("Invalid defense card index: " + defendIndex);
+                }
 
                 int result = calculateBattleOutcome(attackCard, defendCard);
                 if (result > 0) {

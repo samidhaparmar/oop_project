@@ -4,18 +4,20 @@ package GameEngineProject.games;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.InputMismatchException;
 import java.util.List;
 import java.util.Scanner;
 
 import GameEngineProject.gameengine.Game;
 import GameEngineProject.models.Card;
 import GameEngineProject.models.Player;
+import GameEngineProject.gameengine.InvalidMoveException;
 
 public class MemoryMatchGame implements Game {
     private static final int GRID_SIZE = 2; // Fixed 4x4 grid
-    private Card[][] grid;                  // 4x4 grid of cards
-    private List<Card> deck;                // Deck with 8 pairs of cards (16 cards total)
-    private List<Player> players;
+    private Card[][] grid;                  // 4x4 grid of cards,     /// Composition: A grid composed of Card objects.
+    private List<Card> deck;                // Deck with 8 pairs of cards (16 cards total), Composition: A deck composed of Card objects.
+    private List<Player> players;           //// Composition: The game has multiple players.
     private Scanner scanner;
 
     public MemoryMatchGame(Scanner scanner) {
@@ -42,22 +44,29 @@ public class MemoryMatchGame implements Game {
     }
 
     @Override
-    public void play() {
-        System.out.println("Memory Match Game begins!");
+public void play() {
+    System.out.println("Memory Match Game begins!");
 
-        while (!allPairsMatched()) {
-            for (Player player : players) {
-                System.out.println("\n" + player.getName() + "'s turn!");
-                displayGrid(false);
+    while (!allPairsMatched()) {
+        for (Player player : players) {
+            System.out.println("\n" + player.getName() + "'s turn!");
+            displayGrid(false);
 
+            try {
                 System.out.print("Enter row and column for the first card (e.g., 0 1): ");
                 int row1 = scanner.nextInt();
                 int col1 = scanner.nextInt();
+                if (row1 < 0 || row1 >= GRID_SIZE || col1 < 0 || col1 >= GRID_SIZE || grid[row1][col1] == null) {
+                    throw new InvalidMoveException("Invalid first-card coordinates: " + row1 + "," + col1);
+                }
                 revealCard(row1, col1);
 
                 System.out.print("Enter row and column for the second card (e.g., 1 2): ");
                 int row2 = scanner.nextInt();
                 int col2 = scanner.nextInt();
+                if (row2 < 0 || row2 >= GRID_SIZE || col2 < 0 || col2 >= GRID_SIZE || grid[row2][col2] == null) {
+                    throw new InvalidMoveException("Invalid second-card coordinates: " + row2 + "," + col2);
+                }
                 revealCard(row2, col2);
 
                 if (grid[row1][col1] != null && grid[row2][col2] != null &&
@@ -65,18 +74,28 @@ public class MemoryMatchGame implements Game {
                     grid[row1][col1].getSuit().equals(grid[row2][col2].getSuit())) {
                     System.out.println("Match found!");
                     player.incrementScore(1);
-                    grid[row1][col1] = null; // Remove matched cards from grid
+                    grid[row1][col1] = null; // Remove matched cards
                     grid[row2][col2] = null;
                 } else {
                     System.out.println("No match. Turning cards back over.");
                 }
+            } catch (InputMismatchException e) {
+                System.out.println("Invalid input. Please enter valid row and column numbers.");
+                scanner.nextLine(); // Clear the invalid input from scanner
+            } catch (ArrayIndexOutOfBoundsException e) {
+                System.out.println("Out-of-bounds! Please enter row and column values within the grid.");
+                scanner.nextLine(); // Clear the invalid input
+            } catch (InvalidMoveException e) {
+                System.out.println(e.getMessage());
+                scanner.nextLine(); // Clear the invalid input
+            }
 
-                if (allPairsMatched()) {
-                    break;
-                }
+            if (allPairsMatched()) {
+                break;
             }
         }
     }
+}
 
     @Override
     public void end() {
